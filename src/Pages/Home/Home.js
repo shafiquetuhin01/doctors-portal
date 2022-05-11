@@ -1,5 +1,7 @@
 import React from 'react';
 import Banner from './Banner/Banner';
+import Contact from './Contact';
+import Footer from './Footer';
 import Info from './Info';
 import MakeAppt from './MakeAppt';
 import Services from './Services';
@@ -15,6 +17,8 @@ const Home = () => {
             <SpecialService />
             <MakeAppt />
             <Testimonials />
+            <Contact />
+            <Footer />
         </div>
     );
 };
