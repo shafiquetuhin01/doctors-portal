@@ -1,6 +1,7 @@
 import React from 'react';
 import Footer from '../Shared/Footer';
-import Banner from './Banner/Banner';
+import Banner from './Banner';
+
 import Contact from './Contact';
 
 import Info from './Info';
