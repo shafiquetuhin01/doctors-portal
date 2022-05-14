@@ -1,14 +1,18 @@
 import React from "react";
 import { format } from "date-fns";
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../../firebase.init";
+
 const BookingModal = ({ treatment, date, setTreatment }) => {
+  const [user, loading, error] = useAuthState(auth);
   const { name, slots, _id } = treatment;
   const modalSubmit = (e) => {
     e.preventDefault();
     const slot = e.target.slot.value;
-    console.log(_id,name,slot);
+    console.log(_id, name, slot);
     setTreatment(null);
   };
- 
+
   return (
     <div>
       <input type="checkbox" id="booking-modal" className="modal-toggle" />
@@ -20,35 +24,44 @@ const BookingModal = ({ treatment, date, setTreatment }) => {
           >
             ✕
           </label>
-          <h3 className="font-bold text-lg text-secondary ">Booking for: {name}</h3>
-          <form onSubmit={modalSubmit} className="grid grid-cols-1 gap-2 justify-items-center mt-3">
+          <h3 className="font-bold text-lg text-secondary ">
+            Booking for: {name}
+          </h3>
+          <form
+            onSubmit={modalSubmit}
+            className="grid grid-cols-1 gap-2 justify-items-center mt-3"
+          >
             <input
               type="text"
               disabled
               value={format(date, "PP")}
               className="input input-bordered input-primary w-full max-w-xs"
             />
-            <select name="slot" className="select select-bordered w-full max-w-xs">
+            <select
+              name="slot"
+              className="select select-bordered w-full max-w-xs"
+            >
               {slots.map((slot) => (
                 <option value={slot}>{slot}</option>
               ))}
             </select>
             <input
               name="name"
+              disabled
+              value={user?.displayName}
               type="text"
-              placeholder="Your Name"
               className="input input-bordered input-primary w-full max-w-xs"
             />
             <input
               name="email"
               type="email"
-              placeholder="your email"
+              value={user?.email}
               className="input input-bordered input-primary w-full max-w-xs"
             />
             <input
               name="phone"
               type="text"
-              placeholder="+880"
+              value={user?.phone}
               className="input input-bordered input-primary w-full max-w-xs"
             />
             <input

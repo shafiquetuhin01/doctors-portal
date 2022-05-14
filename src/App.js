@@ -8,6 +8,7 @@ import Appointment from './Pages/Appointment/Appointment';
 import Signup from './Pages/Login/Signup';
 import RequireAuth from './Pages/Login/RequireAuth';
 import Review from './Pages/Home/Review';
+import Contact from './Pages/Home/Contact';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="about" element={<About />} />
         <Route path="review" element={<Review />} />
+        <Route path="contact" element={<Contact />} />
         <Route path="appointment" element={
         <RequireAuth>
           <Appointment />
