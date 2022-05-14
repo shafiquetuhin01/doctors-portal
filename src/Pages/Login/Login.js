@@ -1,19 +1,36 @@
 import React from "react";
-import { useSignInWithGoogle } from "react-firebase-hooks/auth";
+import { useSignInWithEmailAndPassword, useSignInWithGoogle } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
 import { useForm } from "react-hook-form";
+import Loading from "../Shared/Loading";
 
 const Login = () => {
-  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+  const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
+  const [
+    signInWithEmailAndPassword,
+    user,
+    loading,
+    error,
+  ] = useSignInWithEmailAndPassword(auth);
+  let signInError;
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
-  if (user) {
-    console.log(user);
+  if (user || gUser) {
+    console.log(user || gUser);
   }
-  const onSubmit = (data) => console.log(data);
+  if(error || gError){
+    signInError = <p className="text-red-500"><small>{error.message || gError}</small></p>
+  }
+  if(loading || gLoading){
+    return <Loading></Loading> 
+  }
+const onSubmit = (data) => {
+  console.log(data)
+  signInWithEmailAndPassword(data.email, data.password);
+};
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -25,6 +42,7 @@ const Login = () => {
             <label className="label">
               <span className="label-text">Email</span>
             </label>
+            
             <input
               type="email"
               placeholder="Your Email"
@@ -83,6 +101,7 @@ const Login = () => {
                   {errors.password.message}
                 </span>
               )}
+              {signInError}
             </label>
           </div>
 
