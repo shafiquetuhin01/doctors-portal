@@ -1,18 +1,20 @@
 import React from "react";
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from "react-firebase-hooks/auth";
+import { useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfile } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
 import { useForm } from "react-hook-form";
 import Loading from "../Shared/Loading";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Signup = () => {
   const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
+  const [updateProfile, updating, updateError] = useUpdateProfile(auth);
+  const navigate = useNavigate();
   const [
-    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
     user,
     loading,
     error,
-  ] = useSignInWithEmailAndPassword(auth);
+  ] = useCreateUserWithEmailAndPassword(auth);
   let signInError;
   const {
     register,
@@ -22,23 +24,55 @@ const Login = () => {
   if (user || gUser) {
     console.log(user || gUser);
   }
-  if(error || gError){
-    signInError = <p className="text-red-500"><small>{error.message || gError}</small></p>
+  if(error || gError || updateError){
+    signInError = <p className="text-red-500"><small>{error.message || gError.message || updateError.message}</small></p>
   }
-  if(loading || gLoading){
+  if(loading || gLoading || updating){
     return <Loading></Loading> 
   }
-const onSubmit = (data) => {
+const onSubmit = async (data) => {
   console.log(data)
-  signInWithEmailAndPassword(data.email, data.password);
+  await createUserWithEmailAndPassword(data.email, data.password);
+  await updateProfile({ displayName: data.name });
+  console.log('Successfully updated');
+  navigate('/appointment');
 };
 
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
-          <h2 className="text-2xl text-center font-bold">Login</h2>
+          <h2 className="text-2xl text-center font-bold">Signup</h2>
 
+          <div className="form-control w-full max-w-xs">
+            <label className="label">
+              <span className="label-text">Name</span>
+            </label>
+            
+            <input
+              type="text"
+              placeholder="Your Name"
+              className="input input-bordered w-full max-w-xs"
+              {...register("name", {
+                required: {
+                  value: true,
+                  message: "Name is required",
+                }
+              })}
+            />
+            <label className="label">
+              {errors.name?.type === "required" && (
+                <span className="label-text-alt text-red-500">
+                  {errors.name.message}
+                </span>
+              )}
+              {errors.name?.type === "pattern" && (
+                <span className="label-text-alt text-red-500">
+                  {errors.name.message}
+                </span>
+              )}
+            </label>
+          </div>
           <div className="form-control w-full max-w-xs">
             <label className="label">
               <span className="label-text">Email</span>
@@ -107,9 +141,9 @@ const onSubmit = (data) => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <input className="btn w-full max-w-xs" value="Login" type="submit" />
+            <input className="btn w-full max-w-xs" value="Signup" type="submit" />
           </form>
-          <p><small>New to Doctors Portal? <Link className="text-primary" to='/signup'>Create an account.</Link></small></p>
+          <p><small>Already have an account? <Link className="text-primary" to='/login'>Please login.</Link></small></p>
           <div className="divider">OR</div>
           <button onClick={() => signInWithGoogle()} className="btn">
             Continue With Google
@@ -120,4 +154,4 @@ const onSubmit = (data) => {
   );
 };
 
-export default Login;
+export default Signup;
