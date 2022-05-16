@@ -9,6 +9,8 @@ import Signup from './Pages/Login/Signup';
 import RequireAuth from './Pages/Login/RequireAuth';
 import Review from './Pages/Home/Review';
 import Contact from './Pages/Home/Contact';
+import React from 'react';
+import { ToastContainer} from 'react-toastify';
 
 function App() {
   return (
@@ -27,6 +29,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
       </Routes>
+      <ToastContainer />
     </div>
   );
 }
