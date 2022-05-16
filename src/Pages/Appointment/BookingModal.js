@@ -6,7 +6,17 @@ import auth from "../../firebase.init";
 const BookingModal = ({ treatment, date, setTreatment }) => {
   const [user, loading, error] = useAuthState(auth);
   const { name, slots, _id } = treatment;
+  const formatedDate = format(date, 'PP');
   const modalSubmit = (e) => {
+    const booking = {
+      treatmentId : _id,
+      treatment : name,
+      date : formatedDate,
+      slot,
+      patientEmail: user.email,
+      patientName: user.displayName,
+      phone : user.target.phone.value
+    }
     e.preventDefault();
     const slot = e.target.slot.value;
     console.log(_id, name, slot);
@@ -41,8 +51,8 @@ const BookingModal = ({ treatment, date, setTreatment }) => {
               name="slot"
               className="select select-bordered w-full max-w-xs"
             >
-              {slots.map((slot) => (
-                <option value={slot}>{slot}</option>
+              {slots.map((slot, i) => (
+                <option key={i} value={slot}>{slot}</option>
               ))}
             </select>
             <input
