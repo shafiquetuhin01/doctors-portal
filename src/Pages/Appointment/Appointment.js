@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import Footer from '../Shared/Footer';
-import ApptBanner from './ApptBanner';
-import AvalAppt from './AvalAppt';
+import AppointmentBanner from './AppointmentBanner';
+import AvailableAppointments from './AvailableAppointments';
 
 const Appointment = () => {
     const [date, setDate] = useState(new Date());
     return (
-        <div className='container mx-auto'>
-            <ApptBanner date={date} setDate={setDate}></ApptBanner>
-            <AvalAppt date={date}></AvalAppt>
+        <div>
+            <AppointmentBanner date={date} setDate={setDate}></AppointmentBanner>
+            <AvailableAppointments date={date}></AvailableAppointments>
             <Footer></Footer>
         </div>
     );
